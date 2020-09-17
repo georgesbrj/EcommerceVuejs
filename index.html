@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./vue.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif:400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <title>Techno</title>
+</head>
+<body>
+
+    <div id="app">
+
+   <header class="header">
+       <img class="logo" src="./assets/techno.svg" >
+       <div class="carrinho_menu" @click="cartAtive = true">{{cartTotal | numberPrice}} | {{cart.length}} </div>
+     
+   </header>
+
+
+               <!-- class products-->
+                  <section class="produtos">
+                     <div v-for="item in products" @click="openModal(item.id)" :key="item.id" class="produto">
+                        <img :src="item.img"  :alt="item.name" class="produto_img" />
+                           <div class="produto_info">
+                           <span class="produto_preco">{{item.price | numberPrice}} </span>
+                              <h2 class="produto_titulo">{{item.name}}</h2>
+                           </div>
+                     </section>
+
+                     <!-- modal product-->  
+                     <section class="modal" v-if="product" @click="closeModal">
+                        <div class="modal_container">
+                        <div class="modal_img">
+                           <img :src="product.img" :alt="product.name"></img>
+                        </div>
+                           <div class="modal_dados">
+                              <button @click="product = false" class="modal_fechar">X</button>
+                              <span class="modal_preco">{{product.price | numberPrice }}</span>
+                              <h2 class="modal_titulo">{{product.name}}</h2>
+                              <p>{{product.description}}</p>
+                            
+                              <button  v-if="product.stock > 0" class="modal_btn" @click="addItem">Adicionar Item</button>
+                              <button  v-else class="modal_btn esgotado" disabled>Produto Esgotado</button>
+                           </div> 
+                           <div class="avaliacoes">
+                              <h2 class="avaliacoes_subtitulos">Avaliaçoes</h2>
+                              <ul>
+                                 <li v-for="review in product.reviews" class="avaliacao">
+                                    <p class="avaliacao_descricao">{{review.description}}</p>
+                                    <p class="avaliacao_usuario">{{review.name}} | {{review.stars}} Estrelas</p>
+                                 </li> 
+                              </ul>    
+                           </div>       
+                     </section>
+
+                     <section class="cart_modal" :class="{active:cartAtive}" @click="clickOutCart">
+                        <div class="cart_container">
+                          <button class="cart_close" @click="cartAtive = false" >X</button>
+                          <h2 class="cart_title">Carrinho</h2>
+                            <div v-if="cart.length > 0">
+                              <ul class="cart_list">
+                                <li v-for="(item, index) in cart" class="cart_item" >
+                                  <p>{{item.name}}</p>
+                                  <p class="cart_price">{{item.price | numberPrice}}</p>
+                                  <button class="cart_remove" @click="removeItem(index)">X</button>
+                                </li>
+                              </ul>
+                              <p class="cart_total">{{cartTotal | numberPrice}}</p>
+                               <button class="cart_final">Finalizar Compra</button>
+                            </div>
+                            <p v-else>O carrinho esta vazio</p>
+                        </div>
+                     </section> 
+                       
+
+                     <div class="alert"  :class="{active:alertActive}">
+                         <p class="alert_message">{{messageAlert}}</p>  
+                        
+                     </div>
+    </div>
+
+
+ <script src="./app.js"></script>   
+</body>
+</html>
